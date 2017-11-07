@@ -42,4 +42,4 @@ async function file () {
 
 /* EXPORT */
 
-export {file};
+export {diff, file};
