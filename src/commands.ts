@@ -41,7 +41,7 @@ async function file () {
     const rootPath = Utils.folder.getRootPath ( activePath ),
           otherPathsTrimmed = otherPaths.map ( path => rootPath && path.startsWith ( rootPath ) ? path.substr ( rootPath.length + 1 ) : path ),
           items = otherPathsTrimmed.map ( ( label, i ) => ({ label, path: otherPaths[i], description: '' }) ),
-          item = await vscode.window.showQuickPick ( items );
+          item = await vscode.window.showQuickPick ( items, { placeHolder: 'Select a file to diff against...' } );
 
     if ( item ) otherPath = item.path;
 
