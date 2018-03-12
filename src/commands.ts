@@ -41,7 +41,9 @@ async function file () {
     const rootPath = Utils.folder.getRootPath ( activePath ),
           otherPathsTrimmed = otherPaths.map ( path => rootPath && path.startsWith ( rootPath ) ? path.substr ( rootPath.length + 1 ) : path ),
           items = otherPathsTrimmed.map ( ( label, i ) => ({ label, path: otherPaths[i], description: '' }) ),
-          item = await vscode.window.showQuickPick ( items, { placeHolder: 'Select a file to diff against...' } );
+          [itemsNested, itemsNotNested] = _.partition ( items, item => item.label.includes ( '/' ) ),
+          itemsSorted = Utils.sortItemsByPath ( itemsNested ).concat ( Utils.sortItemsByPath ( itemsNotNested ) ) as typeof items,
+          item = await vscode.window.showQuickPick ( itemsSorted, { placeHolder: 'Select a file to diff against...' } );
 
     if ( item ) otherPath = item.path;
 

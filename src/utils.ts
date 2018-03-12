@@ -35,6 +35,12 @@ const Utils = {
 
   },
 
+  sortItemsByPath ( items ) {
+
+    return _.sortBy ( items, item => item.label.toLowerCase () );
+
+  },
+
   folder: {
 
     getRootPath ( basePath? ) {
