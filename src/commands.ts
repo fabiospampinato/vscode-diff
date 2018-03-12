@@ -24,9 +24,11 @@ async function file () {
 
   if ( !absolute ( activePath ) ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
 
-  const files = await vscode.workspace.findFiles ( '**/*' ),
-        paths = files.map ( file => file.fsPath ),
-        otherPaths = paths.filter ( path => path !== activePath );
+  const findFiles = await vscode.workspace.findFiles ( '**/*' ),
+        findPaths = findFiles.map ( file => file.fsPath ),
+        documentsPaths = vscode.workspace.textDocuments.map ( doc => doc.uri.fsPath ).filter ( path => !/\.git$/.test ( path ) ),
+        uniqPaths = _.uniq ( findPaths.concat ( documentsPaths ) ) as string[],
+        otherPaths = uniqPaths.filter ( path => path !== activePath );
 
   if ( otherPaths.length < 1 ) return vscode.window.showErrorMessage ( 'You need to have at least 2 saved files in order to start a diff' );
 
@@ -39,10 +41,12 @@ async function file () {
   } else {
 
     const rootPath = Utils.folder.getRootPath ( activePath ),
-          otherPathsTrimmed = otherPaths.map ( path => rootPath && path.startsWith ( rootPath ) ? path.substr ( rootPath.length + 1 ) : path ),
+          rootPathWithSlash = rootPath ? `${rootPath}/` : false,
+          otherPathsTrimmed = otherPaths.map ( path => rootPathWithSlash && path.startsWith ( rootPathWithSlash ) ? path.substr ( rootPathWithSlash.length ) : path ),
           items = otherPathsTrimmed.map ( ( label, i ) => ({ label, path: otherPaths[i], description: '' }) ),
-          [itemsNested, itemsNotNested] = _.partition ( items, item => item.label.includes ( '/' ) ),
-          itemsSorted = Utils.sortItemsByPath ( itemsNested ).concat ( Utils.sortItemsByPath ( itemsNotNested ) ) as typeof items,
+          [itemsAbsolute, itemsRelative] = _.partition ( items, item => item.label.startsWith ( '/' ) ),
+          [itemsNested, itemsNotNested] = _.partition ( itemsRelative, item => item.label.includes ( '/' ) ),
+          itemsSorted = Utils.sortItemsByPath ( itemsAbsolute ).concat ( Utils.sortItemsByPath ( itemsNested ).concat ( Utils.sortItemsByPath ( itemsNotNested ) ) ) as typeof items,
           item = await vscode.window.showQuickPick ( itemsSorted, { placeHolder: 'Select a file to diff against...' } );
 
     if ( item ) otherPath = item.path;
