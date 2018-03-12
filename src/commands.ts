@@ -13,7 +13,7 @@ function diff ( leftPath, rightPath ) {
   const app = Utils.isInsiders () ? 'code-insiders' : 'code',
         term = vscode.window.createTerminal ( 'Diff' );
 
-  term.sendText ( `${app} --diff "${leftPath}" "${rightPath}" && logout`, true );
+  term.sendText ( `${app} --reuse-window --diff "${leftPath}" "${rightPath}" && logout`, true );
 
 }
 
