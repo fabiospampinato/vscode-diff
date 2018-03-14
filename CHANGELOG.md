@@ -1,3 +1,6 @@
+### Version 1.3.0
+- Using the native `vscode.diff` command
+
 ### Version 1.2.0
 - Using a sorting algorithm that produces more predictable results
 - Reusing the window
