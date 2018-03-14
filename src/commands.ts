@@ -3,6 +3,7 @@
 
 import * as _ from 'lodash';
 import * as absolute from 'absolute';
+import * as path from 'path';
 import * as vscode from 'vscode';
 import Utils from './utils';
 
@@ -10,10 +11,11 @@ import Utils from './utils';
 
 function diff ( leftPath, rightPath ) {
 
-  const app = Utils.isInsiders () ? 'code-insiders' : 'code',
-        term = vscode.window.createTerminal ( 'Diff' );
+  const leftUri = vscode.Uri.file ( leftPath ),
+        rightUri = vscode.Uri.file ( rightPath ),
+        title = `${path.basename ( leftPath )} ↔ ${path.basename ( rightPath )}`;
 
-  term.sendText ( `${app} --reuse-window --diff "${leftPath}" "${rightPath}" && logout`, true );
+  return vscode.commands.executeCommand ( 'vscode.diff', leftUri, rightUri, title );
 
 }
 

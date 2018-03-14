@@ -37,7 +37,7 @@
     "url": "https://github.com/fabiospampinato/vscode-diff.git"
   },
   "engines": {
-    "vscode": "^1.15.0"
+    "vscode": "^1.18.0"
   },
   "keywords": [
     "vscode",

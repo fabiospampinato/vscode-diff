@@ -29,12 +29,6 @@ const Utils = {
 
   },
 
-  isInsiders () {
-
-    return !!vscode.env.appName.match ( /insiders/i );
-
-  },
-
   sortItemsByPath ( items ) {
 
     return _.sortBy ( items, item => item.label.toLowerCase () );
