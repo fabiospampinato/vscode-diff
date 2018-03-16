@@ -1,3 +1,6 @@
+### Version 1.3.2
+- Updated readme
+
 ### Version 1.3.1
 - Added an hint about Git File History
 
