@@ -1,4 +1,4 @@
-# VSC Diff
+# Diff
 
 <p align="center">
 	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-diff/master/resources/logo-128x128.png" alt="Logo">
@@ -6,16 +6,12 @@
 
 Diff 2 opened files with ease. Because running `code --diff path1 path2` is too slow.
 
-It requires that you run the `Install 'code' command in PATH` command.
-
-It works in Code Insiders as well.
-
 ## Install
 
-Run the following in the command palette:
+Follow the instructions in the [Marketplace](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-diff), or run the following in the command palette:
 
 ```shell
-ext install vscode-diff
+ext install fabiospampinato.vscode-diff
 ```
 
 ## Usage
