@@ -24,6 +24,8 @@ async function file () {
   const {activeTextEditor} = vscode.window,
         activePath = activeTextEditor && activeTextEditor.document.uri.fsPath;
 
+  if ( !activePath ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
+
   if ( !absolute ( activePath ) ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
 
   const findFiles = await vscode.workspace.findFiles ( '**/*' ),
