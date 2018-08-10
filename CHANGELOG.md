@@ -1,3 +1,6 @@
+### Version 1.3.3
+- Displaying an error when there’s no file opened
+
 ### Version 1.3.2
 - Updated readme
 
