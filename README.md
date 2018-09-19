@@ -26,7 +26,7 @@ Diff: File // Diff the current file against another one
 
 ![Demo](resources/demo.gif)
 
-## Hints:
+## Hints
 
 - **Diff against previous versions**: sometimes diffing against open files is not enough, try [Git File History](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-git-history) for diffing against previous versions of the current file.
 
