@@ -1,3 +1,6 @@
+### Version 1.3.4
+- Bundling with webpack
+
 ### Version 1.3.3
 - Displaying an error when there’s no file opened
 
