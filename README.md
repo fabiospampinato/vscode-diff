@@ -1,7 +1,7 @@
 # Diff
 
 <p align="center">
-	<img src="https://raw.githubusercontent.com/fabiospampinato/vscode-diff/master/resources/logo.png" width="128" alt="Logo">
+  <img src="https://raw.githubusercontent.com/fabiospampinato/vscode-diff/master/resources/logo.png" width="128" alt="Logo">
 </p>
 
 Diff 2 opened files with ease. Because running `code --diff path1 path2` is too slow.
