@@ -3,6 +3,7 @@
 
 import * as _ from 'lodash';
 import * as absolute from 'absolute';
+import * as isBinaryPath from 'is-binary-path';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import Utils from './utils';
@@ -31,7 +32,8 @@ async function file () {
   const findFiles = await vscode.workspace.findFiles ( '**/*' ),
         findPaths = findFiles.map ( file => file.fsPath ),
         documentsPaths = vscode.workspace.textDocuments.map ( doc => doc.uri.fsPath ).filter ( path => !/\.git$/.test ( path ) ),
-        uniqPaths = _.uniq ( findPaths.concat ( documentsPaths ) ) as string[],
+        textualPaths = findPaths.concat ( documentsPaths ).filter ( path => !isBinaryPath ( path ) ),
+        uniqPaths = _.uniq ( textualPaths ) as string[],
         otherPaths = uniqPaths.filter ( path => path !== activePath );
 
   if ( otherPaths.length < 1 ) return vscode.window.showErrorMessage ( 'You need to have at least 2 saved files in order to start a diff' );

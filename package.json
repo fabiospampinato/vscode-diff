@@ -52,6 +52,7 @@
   "dependencies": {
     "@types/node": "^10.12.8",
     "absolute": "0.0.1",
+    "is-binary-path": "^2.0.0",
     "lodash": "^4.17.4",
     "pify": "^3.0.0"
   },
