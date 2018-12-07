@@ -1,3 +1,6 @@
+### Version 1.4.0
+- Removed binary files from the quickpick
+
 ### Version 1.3.6
 - Readme: using hi-res logo
 
