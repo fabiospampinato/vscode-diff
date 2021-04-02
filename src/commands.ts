@@ -14,7 +14,9 @@ function diff ( leftPath, rightPath ) {
 
   const leftUri = vscode.Uri.file ( leftPath ),
         rightUri = vscode.Uri.file ( rightPath ),
-        title = `${path.basename ( leftPath )} ↔ ${path.basename ( rightPath )}`;
+        leftName = path.basename ( leftPath ),
+        rightName = path.basename ( rightPath ),
+        title = ( leftName !== rightName ) ? `${leftName} ↔ ${rightName}` : `${leftName} (${leftPath}) ↔ ${rightName} (${rightPath})`;
 
   return vscode.commands.executeCommand ( 'vscode.diff', leftUri, rightUri, title );
 
