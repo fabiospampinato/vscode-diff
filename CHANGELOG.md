@@ -1,3 +1,8 @@
+### Version 1.4.1
+- Update .github/FUNDING.yml
+- Deleted repo-level github funding.yml
+- Ensuring files with the same name can be distinguished in the diff editor
+
 ### Version 1.4.0
 - Removed binary files from the quickpick
 

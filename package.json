@@ -3,7 +3,7 @@
   "displayName": "Diff",
   "description": "Diff 2 opened files with ease. Because running `code --diff path1 path2` is too slow.",
   "icon": "resources/logo-128x128.png",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT",
   "main": "out/extension.js",
   "publisher": "fabiospampinato",
