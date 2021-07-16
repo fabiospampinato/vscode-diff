@@ -3,10 +3,11 @@
 
 import * as _ from 'lodash';
 import * as absolute from 'absolute';
-import * as isBinaryPath from 'is-binary-path';
 import * as path from 'path';
 import * as vscode from 'vscode';
 import Utils from './utils';
+
+const isBinaryPath = require ( 'is-binary-path' );
 
 /* COMMANDS */
 

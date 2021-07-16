@@ -26,7 +26,7 @@ const activate = ( context: vscode.ExtensionContext ) => {
     }
   });
 
-  Utils.initCommands ( context );
+  return Utils.initCommands ( context );
 
 };
 
