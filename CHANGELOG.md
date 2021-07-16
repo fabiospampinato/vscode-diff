@@ -1,3 +1,6 @@
+### Version 1.4.2
+- Added a dialog announcing the fundraising
+
 ### Version 1.4.1
 - Update .github/FUNDING.yml
 - Deleted repo-level github funding.yml
