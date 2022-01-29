@@ -32,10 +32,13 @@ async function file () {
 
   if ( !absolute ( activePath ) ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
 
+  const dirPath = path.dirname ( activePath );
+
   const findFiles = await vscode.workspace.findFiles ( '**/*' ),
         findPaths = findFiles.map ( file => file.fsPath ),
+        findRelativePaths = findFiles.filter (({ fsPath }) => fsPath.startsWith ( dirPath ) && fsPath !== activePath ).map ( file => `.${file.fsPath.substring ( dirPath.length ) }` ),
         documentsPaths = vscode.workspace.textDocuments.map ( doc => doc.uri.fsPath ).filter ( path => !/\.git$/.test ( path ) ),
-        textualPaths = findPaths.concat ( documentsPaths ).filter ( path => !isBinaryPath ( path ) ),
+        textualPaths = findPaths.concat ( findRelativePaths ).concat ( documentsPaths ).filter ( path => !isBinaryPath ( path ) ),
         uniqPaths = _.uniq ( textualPaths ) as string[],
         otherPaths = uniqPaths.filter ( path => path !== activePath );
 
@@ -58,8 +61,12 @@ async function file () {
           itemsSorted = Utils.sortItemsByPath ( itemsAbsolute ).concat ( Utils.sortItemsByPath ( itemsNested ).concat ( Utils.sortItemsByPath ( itemsNotNested ) ) ) as typeof items,
           item = await vscode.window.showQuickPick ( itemsSorted, { placeHolder: 'Select a file to diff against...' } );
 
-    if ( item ) otherPath = item.path;
-
+    if ( item ) {
+      otherPath = item.path;
+      if ( otherPath.startsWith ( './' ) ) {
+        otherPath = path.join(dirPath, otherPath);
+      }
+    } 
   }
 
   if ( !otherPath ) return;
