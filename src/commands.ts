@@ -28,29 +28,31 @@ const file = async (): Promise<void> => {
   const isCompatible = ( filePath: string ) => isBinaryPath ( filePath ) === isBinary;
   const isTarget = ( filePath: string ) => filePath === targetPath;
 
-  const filesUntitled = isTextual ? getOpenUntitledFiles () : [];
+  const filesUntitled = isTextual && options.showUntitledFiles && options.showOpenFiles ? getOpenUntitledFiles () : [];
   const filesUntitledCompatible = filesUntitled.filter ( file => !isTarget ( file.path ) );
   const filesUntitledSorted = sortByPath ( filesUntitledCompatible, file => file.path );
 
-  const filesOpen = getOpenFilesPaths ();
+  const filesOpen = options.showOpenFiles ? getOpenFilesPaths () : [];
   const filesOpenCompatible = filesOpen.filter ( filePath => isCompatible ( filePath ) && !isTarget ( filePath ) );
   const filesOpenSorted = sortByPath ( filesOpenCompatible, filePath => filePath );
 
-  const filesFound = rootPath ? await getFilesByGlobs ( rootPath, options.include, options.exclude ) : [];
-  const filesIgnoreFound = rootPath ? await getFilesByNames ( rootPath, options.ignore ) : [];
+  const filesFound = rootPath && options.showFoundFiles ? await getFilesByGlobs ( rootPath, options.include, options.exclude ) : [];
+  const filesIgnoreFound = rootPath && options.showFoundFiles ? await getFilesByNames ( rootPath, options.ignore ) : [];
   const isIgnored = getIgnoreFromFilePaths ( filesIgnoreFound );
   const filesFoundCompatible = filesFound.filter ( filePath => !isIgnored ( filePath ) && isCompatible ( filePath ) && !isTarget ( filePath ) );
   const filesFoundSorted = sortByPath ( filesFoundCompatible, filePath => filePath );
 
+  const openLabel = options.showFoundFiles ? 'open' : undefined;
+
   const itemsUntitled = filesUntitledSorted.map ( file => ({
     label: file.path,
-    description: 'open',
+    description: openLabel,
     file
   }));
 
   const itemsOpen = filesOpenSorted.map ( filePath => ({
     label: getFileLabel ( rootPath, filePath ),
-    description: 'open',
+    description: openLabel,
     filePath
   }));
 

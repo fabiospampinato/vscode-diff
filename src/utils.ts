@@ -114,14 +114,23 @@ const getOptions = (): Options => {
   const exclude = isArray ( config?.exclude ) && config.exclude.every ( isString ) ? config.exclude : getFilesExclude ();
   const ignore = isArray ( config?.ignore ) && config.ignore.every ( isString ) ? config.ignore : ['.gitignore'];
   const include = isArray ( config?.include ) && config.include.every ( isString ) && config.include.length ? config.include : ['**/*'];
+  const showUntitledFiles = isBoolean ( config?.showUntitledFiles ) ? config.showUntitledFiles : true;
+  const showOpenFiles = isBoolean ( config?.showOpenFiles ) ? config.showOpenFiles : true;
+  const showFoundFiles = isBoolean ( config?.showFoundFiles ) ? config.showFoundFiles : true;
 
-  return { exclude, ignore, include };
+  return { exclude, ignore, include, showUntitledFiles, showOpenFiles, showFoundFiles };
 
 };
 
 const isArray = ( value: unknown ): value is any[] => {
 
   return Array.isArray ( value );
+
+};
+
+const isBoolean = ( value: unknown ): value is boolean => {
+
+  return typeof value === 'boolean';
 
 };
 
@@ -168,4 +177,4 @@ const unixify = (() => {
 
 /* EXPORT */
 
-export {getFileDepth, getFileLabel, getFileTemp, getFilesByGlobs, getFilesByNames, getFilesExclude, getIgnoreFromFilePath, getIgnoreFromFilePaths, getOptions, isArray, isObject, isString, sortByPath, unixify};
+export {getFileDepth, getFileLabel, getFileTemp, getFilesByGlobs, getFilesByNames, getFilesExclude, getIgnoreFromFilePath, getIgnoreFromFilePaths, getOptions, isArray, isBoolean, isObject, isString, sortByPath, unixify};

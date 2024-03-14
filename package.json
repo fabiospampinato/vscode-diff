@@ -39,6 +39,21 @@
           "default": [
             "**/*"
           ]
+        },
+        "diff.showUntitledFiles": {
+          "type": "boolean",
+          "description": "Whether to show untitled files in the selector or not",
+          "default": true
+        },
+        "diff.showOpenFiles": {
+          "type": "boolean",
+          "description": "Whether to show open files at the top of the selector or not",
+          "default": true
+        },
+        "diff.showFoundFiles": {
+          "type": "boolean",
+          "description": "Whether to show other found files in the selector or not",
+          "default": true
         }
       }
     },

@@ -29,6 +29,9 @@ It adds 1 command to the command palette:
   "diff.exclude": null, // An array of globs to exclude, unless specificed it uses the "files.exclude" setting
   "diff.ignore": [".gitignore"], // An array of names for .gitignore-like files to use
   "diff.include": ["**/*"], // An array of globs to include
+  "diff.showUntitledFiles": true, // Whether to show untitled files in the selector or not
+  "diff.showOpenFiles": true, // Whether to show open files at the top of the selector or not
+  "diff.showFoundFiles": true // Whether to show other found files in the selector or not
 }
 ```
 
