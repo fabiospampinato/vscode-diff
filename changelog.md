@@ -1,3 +1,13 @@
+### Version 2.0.0
+- Rewitten: more modern code, almost no third-party dependencies, 99% smaller bundle
+- Removed donation popup, thank you for your support!
+- New setting: "diff.exclude", for overriding the default exclude globs
+- New setting: "diff.include", for overriding the default include globs
+- New setting: "diff.ignore", for overriding the default list of files to treat as .gitignore-like files
+- Added support for diffing against untitled files
+- Added support for listing currently open files first, for convenience
+- Added support for diffing between binary files, to the extent that vscode itself supports this
+
 ### Version 1.4.2
 - Added a dialog announcing the fundraising
 
