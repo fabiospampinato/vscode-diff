@@ -1,3 +1,7 @@
+### Version 2.1.0
+- New settings: "diff.showUntitledFiles", "diff.showOpenFiles" and "diff.showFoundFiles"
+- New setting: "diff.showFoundRelativeFiles"
+
 ### Version 2.0.0
 - Rewitten: more modern code, almost no third-party dependencies, 99% smaller bundle
 - Removed donation popup, thank you for your support!
