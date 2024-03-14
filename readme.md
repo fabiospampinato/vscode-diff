@@ -19,22 +19,22 @@ ext install fabiospampinato.vscode-diff
 It adds 1 command to the command palette:
 
 ```js
-Diff: File // Diff the current file against another one
+'Diff: File' // Diff the current file against another one
 ```
 
-## Demo
+## Settings
 
-![Demo](resources/demo.gif)
+```js
+{
+  "diff.exclude": null, // An array of globs to exclude, unless specificed it uses the "files.exclude" setting
+  "diff.ignore": [".gitignore"], // An array of names for .gitignore-like files to use
+  "diff.include": ["**/*"], // An array of globs to include
+}
+```
 
 ## Hints
 
-- **Diff against previous versions**: sometimes diffing against open files is not enough, try [Git File History](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-git-history) for diffing against previous versions of the current file.
-
-## Contributing
-
-If you found a problem, or have a feature request, please open an [issue](https://github.com/fabiospampinato/vscode-diff/issues) about it.
-
-If you want to make a pull request you can debug the extension using [Debug Launcher](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-debug-launcher).
+- **Diff against previous versions**: sometimes diffing against open files is not what you want, try [Git File History](https://marketplace.visualstudio.com/items?itemName=fabiospampinato.vscode-git-history) for diffing against previous versions of the current file.
 
 ## License
 

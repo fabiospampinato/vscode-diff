@@ -1,73 +1,84 @@
 
 /* IMPORT */
 
-import * as _ from 'lodash';
-import * as absolute from 'absolute';
-import * as path from 'path';
-import * as vscode from 'vscode';
-import Utils from './utils';
+import path from 'node:path';
+import isBinaryPath from 'is-binary-path';
+import {alert, getActiveBinaryFilePath, getActiveTextualFilePath, getActiveUntitledFile, getOpenFilesPaths, getOpenUntitledFiles, getProjectRootPath, openInDiffEditor, prompt} from 'vscode-extras';
+import {getFileLabel, getFileTemp, getFilesByGlobs, getFilesByNames, getIgnoreFromFilePaths, getOptions, isString, sortByPath} from './utils';
 
-const isBinaryPath = require ( 'is-binary-path' );
+/* MAIN */
 
-/* COMMANDS */
+const file = async (): Promise<void> => {
 
-function diff ( leftPath, rightPath ) {
+  const binaryFilePath = getActiveBinaryFilePath ();
+  const textualFilePath = getActiveTextualFilePath ();
+  const untitledFile = getActiveUntitledFile ();
 
-  const leftUri = vscode.Uri.file ( leftPath ),
-        rightUri = vscode.Uri.file ( rightPath ),
-        leftName = path.basename ( leftPath ),
-        rightName = path.basename ( rightPath ),
-        title = ( leftName !== rightName ) ? `${leftName} ↔ ${rightName}` : `${leftName} (${leftPath}) ↔ ${rightName} (${rightPath})`;
+  const target = binaryFilePath || textualFilePath || untitledFile;
+  const targetPath = isString ( target ) ? target : target?.path;
 
-  return vscode.commands.executeCommand ( 'vscode.diff', leftUri, rightUri, title );
+  if ( !target || !targetPath ) return alert.error ( 'You need to open a file to diff first' );
 
-}
+  const options = getOptions ();
+  const rootPath = getProjectRootPath ();
 
-async function file () {
+  const isBinary = ( targetPath === binaryFilePath );
+  const isTextual = !isBinary;
 
-  const {activeTextEditor} = vscode.window,
-        activePath = activeTextEditor && activeTextEditor.document.uri.fsPath;
+  const isCompatible = ( filePath: string ) => isBinaryPath ( filePath ) === isBinary;
+  const isTarget = ( filePath: string ) => filePath === targetPath;
 
-  if ( !activePath ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
+  const filesUntitled = isTextual ? getOpenUntitledFiles () : [];
+  const filesUntitledCompatible = filesUntitled.filter ( file => !isTarget ( file.path ) );
+  const filesUntitledSorted = sortByPath ( filesUntitledCompatible, file => file.path );
 
-  if ( !absolute ( activePath ) ) return vscode.window.showErrorMessage ( 'You cannot diff an unsaved file' );
+  const filesOpen = getOpenFilesPaths ();
+  const filesOpenCompatible = filesOpen.filter ( filePath => isCompatible ( filePath ) && !isTarget ( filePath ) );
+  const filesOpenSorted = sortByPath ( filesOpenCompatible, filePath => filePath );
 
-  const findFiles = await vscode.workspace.findFiles ( '**/*' ),
-        findPaths = findFiles.map ( file => file.fsPath ),
-        documentsPaths = vscode.workspace.textDocuments.map ( doc => doc.uri.fsPath ).filter ( path => !/\.git$/.test ( path ) ),
-        textualPaths = findPaths.concat ( documentsPaths ).filter ( path => !isBinaryPath ( path ) ),
-        uniqPaths = _.uniq ( textualPaths ) as string[],
-        otherPaths = uniqPaths.filter ( path => path !== activePath );
+  const filesFound = rootPath ? await getFilesByGlobs ( rootPath, options.include, options.exclude ) : [];
+  const filesIgnoreFound = rootPath ? await getFilesByNames ( rootPath, options.ignore ) : [];
+  const isIgnored = getIgnoreFromFilePaths ( filesIgnoreFound );
+  const filesFoundCompatible = filesFound.filter ( filePath => !isIgnored ( filePath ) && isCompatible ( filePath ) && !isTarget ( filePath ) );
+  const filesFoundSorted = sortByPath ( filesFoundCompatible, filePath => filePath );
 
-  if ( otherPaths.length < 1 ) return vscode.window.showErrorMessage ( 'You need to have at least 2 saved files in order to start a diff' );
+  const itemsUntitled = filesUntitledSorted.map ( file => ({
+    label: file.path,
+    description: 'open',
+    file
+  }));
 
-  let otherPath;
+  const itemsOpen = filesOpenSorted.map ( filePath => ({
+    label: getFileLabel ( rootPath, filePath ),
+    description: 'open',
+    filePath
+  }));
 
-  if ( otherPaths.length === 1 ) {
+  const itemsFound = filesFoundSorted.map ( filePath => ({
+    label: getFileLabel ( rootPath, filePath ),
+    filePath
+  }));
 
-    otherPath = otherPaths[0];
+  const items = [...itemsUntitled, ...itemsOpen, ...itemsFound];
 
-  } else {
+  if ( !items.length ) return alert.error ( 'No files to diff against found' );
 
-    const rootPath = Utils.folder.getRootPath ( activePath ),
-          rootPathWithSlash = rootPath ? `${rootPath}/` : false,
-          otherPathsTrimmed = otherPaths.map ( path => rootPathWithSlash && path.startsWith ( rootPathWithSlash ) ? path.substr ( rootPathWithSlash.length ) : path ),
-          items = otherPathsTrimmed.map ( ( label, i ) => ({ label, path: otherPaths[i], description: '' }) ),
-          [itemsAbsolute, itemsRelative] = _.partition ( items, item => item.label.startsWith ( '/' ) ),
-          [itemsNested, itemsNotNested] = _.partition ( itemsRelative, item => item.label.includes ( '/' ) ),
-          itemsSorted = Utils.sortItemsByPath ( itemsAbsolute ).concat ( Utils.sortItemsByPath ( itemsNested ).concat ( Utils.sortItemsByPath ( itemsNotNested ) ) ) as typeof items,
-          item = await vscode.window.showQuickPick ( itemsSorted, { placeHolder: 'Select a file to diff against...' } );
+  const item = await prompt.select ( 'Select a file to diff against...', items );
 
-    if ( item ) otherPath = item.path;
+  if ( !item ) return;
 
-  }
+  const leftPath = !isString ( target ) ? await getFileTemp ( target.path, target.content ) : targetPath;
+  const rightPath = ( 'file' in item ) ? await getFileTemp ( item.file.path, item.file.content ) : item.filePath;
 
-  if ( !otherPath ) return;
+  const leftName = path.basename ( leftPath );
+  const rightName = path.basename ( rightPath );
 
-  return diff ( activePath, otherPath );
+  const title = ( leftName !== rightName ) ? `${leftName} ↔ ${rightName}` : `${leftName} (${leftPath}) ↔ ${rightName} (${rightPath})`; //TODO: Improve this, using the whole path is pretty snoisy
 
-}
+  openInDiffEditor ( leftPath, rightPath, title );
+
+};
 
 /* EXPORT */
 
-export {diff, file};
+export {file};
