@@ -7,7 +7,8 @@ type Options = {
   include: string[],
   showUntitledFiles: boolean,
   showOpenFiles: boolean,
-  showFoundFiles: boolean
+  showFoundFiles: boolean,
+  showFoundRelativeFiles: boolean
 };
 
 /* EXPORT */

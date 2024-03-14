@@ -30,6 +30,17 @@ const getFileLabel = ( rootPath: string | undefined, filePath: string ): string 
 
 };
 
+const getFileRelative = ( rootPath: string, filePath: string ): string => {
+
+  const relative = unixify ( path.relative ( rootPath, filePath ) );
+
+  if ( relative.startsWith ( '../' ) ) return relative;
+  if ( relative.startsWith ( './' ) ) return relative;
+
+  return `./${relative}`;
+
+};
+
 const getFileTemp = async ( filePath: string, fileContent: Buffer | string ): Promise<string> => {
 
   const tempFileName = path.basename ( filePath );
@@ -117,8 +128,9 @@ const getOptions = (): Options => {
   const showUntitledFiles = isBoolean ( config?.showUntitledFiles ) ? config.showUntitledFiles : true;
   const showOpenFiles = isBoolean ( config?.showOpenFiles ) ? config.showOpenFiles : true;
   const showFoundFiles = isBoolean ( config?.showFoundFiles ) ? config.showFoundFiles : true;
+  const showFoundRelativeFiles = isBoolean ( config?.showFoundRelativeFiles ) ? config.showFoundRelativeFiles : false;
 
-  return { exclude, ignore, include, showUntitledFiles, showOpenFiles, showFoundFiles };
+  return { exclude, ignore, include, showUntitledFiles, showOpenFiles, showFoundFiles, showFoundRelativeFiles };
 
 };
 
@@ -177,4 +189,4 @@ const unixify = (() => {
 
 /* EXPORT */
 
-export {getFileDepth, getFileLabel, getFileTemp, getFilesByGlobs, getFilesByNames, getFilesExclude, getIgnoreFromFilePath, getIgnoreFromFilePaths, getOptions, isArray, isBoolean, isObject, isString, sortByPath, unixify};
+export {getFileDepth, getFileLabel, getFileRelative, getFileTemp, getFilesByGlobs, getFilesByNames, getFilesExclude, getIgnoreFromFilePath, getIgnoreFromFilePaths, getOptions, isArray, isBoolean, isObject, isString, sortByPath, unixify};

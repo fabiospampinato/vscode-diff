@@ -4,7 +4,7 @@
 import path from 'node:path';
 import isBinaryPath from 'is-binary-path';
 import {alert, getActiveBinaryFilePath, getActiveTextualFilePath, getActiveUntitledFile, getOpenFilesPaths, getOpenUntitledFiles, getProjectRootPath, openInDiffEditor, prompt} from 'vscode-extras';
-import {getFileLabel, getFileTemp, getFilesByGlobs, getFilesByNames, getIgnoreFromFilePaths, getOptions, isString, sortByPath} from './utils';
+import {getFileLabel, getFileRelative, getFileTemp, getFilesByGlobs, getFilesByNames, getIgnoreFromFilePaths, getOptions, isString, sortByPath} from './utils';
 
 /* MAIN */
 
@@ -16,14 +16,16 @@ const file = async (): Promise<void> => {
 
   const target = binaryFilePath || textualFilePath || untitledFile;
   const targetPath = isString ( target ) ? target : target?.path;
+  const targetFolderPath = targetPath ? path.dirname ( targetPath ) : undefined;
 
-  if ( !target || !targetPath ) return alert.error ( 'You need to open a file to diff first' );
+  if ( !target || !targetPath || !targetFolderPath ) return alert.error ( 'You need to open a file to diff first' );
 
   const options = getOptions ();
   const rootPath = getProjectRootPath ();
 
   const isBinary = ( targetPath === binaryFilePath );
   const isTextual = !isBinary;
+  const isUntitled = !!untitledFile;
 
   const isCompatible = ( filePath: string ) => isBinaryPath ( filePath ) === isBinary;
   const isTarget = ( filePath: string ) => filePath === targetPath;
@@ -41,6 +43,8 @@ const file = async (): Promise<void> => {
   const isIgnored = getIgnoreFromFilePaths ( filesIgnoreFound );
   const filesFoundCompatible = filesFound.filter ( filePath => !isIgnored ( filePath ) && isCompatible ( filePath ) && !isTarget ( filePath ) );
   const filesFoundSorted = sortByPath ( filesFoundCompatible, filePath => filePath );
+
+  const filesFoundRelativeSorted = !isUntitled && options.showFoundRelativeFiles ? filesFoundSorted : [];
 
   const openLabel = options.showFoundFiles ? 'open' : undefined;
 
@@ -61,7 +65,12 @@ const file = async (): Promise<void> => {
     filePath
   }));
 
-  const items = [...itemsUntitled, ...itemsOpen, ...itemsFound];
+  const itemsFoundRelative = filesFoundRelativeSorted.map ( filePath => ({
+    label: getFileRelative ( targetFolderPath, filePath ),
+    filePath
+  }));
+
+  const items = [...itemsUntitled, ...itemsOpen, ...itemsFound, ...itemsFoundRelative];
 
   if ( !items.length ) return alert.error ( 'No files to diff against found' );
 

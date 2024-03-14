@@ -31,7 +31,8 @@ It adds 1 command to the command palette:
   "diff.include": ["**/*"], // An array of globs to include
   "diff.showUntitledFiles": true, // Whether to show untitled files in the selector or not
   "diff.showOpenFiles": true, // Whether to show open files at the top of the selector or not
-  "diff.showFoundFiles": true // Whether to show other found files in the selector or not
+  "diff.showFoundFiles": true, // Whether to show other found files in the selector or not
+  "diff.showFoundRelativeFiles": false // Whether to show other found files, using relative paths, in the selector or not
 }
 ```
 
