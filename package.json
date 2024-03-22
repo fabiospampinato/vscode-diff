@@ -5,7 +5,7 @@
   "repository": "github:fabiospampinato/vscode-diff",
   "description": "Diff 2 opened files with ease. Because running `code --diff path1 path2` is too slow.",
   "icon": "resources/logo-128x128.png",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "dist/index.js",
   "contributes": {
     "configuration": {

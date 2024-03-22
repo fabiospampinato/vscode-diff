@@ -1,3 +1,6 @@
+### Version 2.1.1
+- Optimized handling of .gitignore-like files, finding files to diff against faster
+
 ### Version 2.1.0
 - New settings: "diff.showUntitledFiles", "diff.showOpenFiles" and "diff.showFoundFiles"
 - New setting: "diff.showFoundRelativeFiles"
