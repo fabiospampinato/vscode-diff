@@ -4,7 +4,7 @@
 import path from 'node:path';
 import isBinaryPath from 'is-binary-path';
 import {alert, getActiveBinaryFilePath, getActiveTextualFilePath, getActiveUntitledFile, getOpenFilesPaths, getOpenUntitledFiles, getProjectRootPath, openInDiffEditor, prompt} from 'vscode-extras';
-import {getFileLabel, getFileRelative, getFileTemp, getFilesByGlobs, getFilesByNames, getIgnoreFromFilePaths, getOptions, isString, sortByPath} from './utils';
+import {getFileLabel, getFileRelative, getFileTemp, getFiles, getOptions, isString, sortByPath} from './utils';
 
 /* MAIN */
 
@@ -38,10 +38,8 @@ const file = async (): Promise<void> => {
   const filesOpenCompatible = filesOpen.filter ( filePath => isCompatible ( filePath ) && !isTarget ( filePath ) );
   const filesOpenSorted = sortByPath ( filesOpenCompatible, filePath => filePath );
 
-  const filesFound = rootPath && options.showFoundFiles ? await getFilesByGlobs ( rootPath, options.include, options.exclude ) : [];
-  const filesIgnoreFound = rootPath && options.showFoundFiles ? await getFilesByNames ( rootPath, options.ignore ) : [];
-  const isIgnored = getIgnoreFromFilePaths ( filesIgnoreFound );
-  const filesFoundCompatible = filesFound.filter ( filePath => !isIgnored ( filePath ) && isCompatible ( filePath ) && !isTarget ( filePath ) );
+  const filesFound = rootPath && options.showFoundFiles ? await getFiles ( rootPath, options.include, options.exclude, options.ignore ) : [];
+  const filesFoundCompatible = filesFound.filter ( filePath => isCompatible ( filePath ) && !isTarget ( filePath ) );
   const filesFoundSorted = sortByPath ( filesFoundCompatible, filePath => filePath );
 
   const filesFoundRelativeSorted = !isUntitled && options.showFoundRelativeFiles ? filesFoundSorted : [];

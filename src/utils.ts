@@ -1,19 +1,16 @@
 
 /* IMPORT */
 
-import fastIgnore from 'fast-ignore';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import readdir from 'tiny-readdir-glob';
+import readdir from 'tiny-readdir-glob-gitignore';
 import vscode from 'vscode';
 import {getConfig} from 'vscode-extras';
 import zeptoid from 'zeptoid';
 import type {Options} from './types';
 
 /* MAIN */
-
-//TODO: Maybe promote the "ignore function generation" stuff to a standalone package, as it could be broadly useful
 
 const getFileDepth = ( filePath: string ): number => {
 
@@ -54,26 +51,15 @@ const getFileTemp = async ( filePath: string, fileContent: Buffer | string ): Pr
 
 };
 
-const getFilesByGlobs = async ( rootPath: string, includeGlob: string | string[], excludeGlob?: string | string[] ): Promise<string[]> => {
+const getFiles = async ( rootPath: string, includeGlob: string | string[], excludeGlob: string | string[], ignoreNames: string[] ): Promise<string[]> => {
 
   const {files} = await readdir ( includeGlob, {
     cwd: rootPath,
     ignore: excludeGlob,
+    ignoreFiles: ignoreNames,
+    ignoreFilesFindAbove: false,
     followSymlinks: false
-  });
-
-  return files;
-
-};
-
-const getFilesByNames = async ( rootPath: string, fileNames: string[] ): Promise<string[]> => {
-
-  if ( !fileNames.length ) return [];
-
-  const {files} = await readdir ( `**/${fileNames}`, {
-    cwd: rootPath,
-    followSymlinks: false
-  });
+  })
 
   return files;
 
@@ -88,34 +74,6 @@ const getFilesExclude = (): string[] => {
   const globs = Object.entries ( excludes ).filter ( ([ _, enabled ]) => enabled ).map ( ([ glob ]) => glob );
 
   return globs;
-
-};
-
-const getIgnoreFromFilePath = ( filePath: string ): (( filePath: string ) => boolean) => {
-
-  const fileContent = fs.readFileSync ( filePath, 'utf8' );
-  const folderPath = path.dirname ( filePath );
-  const ignore = fastIgnore ( fileContent );
-
-  return ( filePath: string ): boolean => {
-
-    return ignore ( path.relative ( folderPath, filePath ) );
-
-  };
-
-};
-
-const getIgnoreFromFilePaths = ( filePaths: string[] ): (( filePath: string ) => boolean) => {
-
-  const ignores = filePaths.map ( getIgnoreFromFilePath );
-
-  if ( !ignores.length ) return () => false;
-
-  return ( filePath: string ): boolean => {
-
-    return ignores.some ( ignore => ignore ( filePath ) );
-
-  };
 
 };
 
@@ -189,4 +147,4 @@ const unixify = (() => {
 
 /* EXPORT */
 
-export {getFileDepth, getFileLabel, getFileRelative, getFileTemp, getFilesByGlobs, getFilesByNames, getFilesExclude, getIgnoreFromFilePath, getIgnoreFromFilePaths, getOptions, isArray, isBoolean, isObject, isString, sortByPath, unixify};
+export {getFileDepth, getFileLabel, getFileRelative, getFileTemp, getFiles, getFilesExclude, getOptions, isArray, isBoolean, isObject, isString, sortByPath, unixify};

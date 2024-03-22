@@ -94,9 +94,8 @@
     "diff"
   ],
   "dependencies": {
-    "fast-ignore": "^1.1.1",
     "is-binary-path": "^2.1.0",
-    "tiny-readdir-glob": "^1.2.1",
+    "tiny-readdir-glob-gitignore": "^1.0.0",
     "vscode-extras": "^1.7.1",
     "zeptoid": "^1.0.1"
   },
