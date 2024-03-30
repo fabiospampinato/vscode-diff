@@ -1,3 +1,6 @@
+### Version 2.1.2
+- Updated dependencies, finding files a bit faster
+
 ### Version 2.1.1
 - Optimized handling of .gitignore-like files, finding files to diff against faster
 
