@@ -95,7 +95,7 @@
   ],
   "dependencies": {
     "is-binary-path": "^2.1.0",
-    "tiny-readdir-glob-gitignore": "^1.0.0",
+    "tiny-readdir-glob-gitignore": "^1.0.2",
     "vscode-extras": "^1.7.1",
     "zeptoid": "^1.0.1"
   },
