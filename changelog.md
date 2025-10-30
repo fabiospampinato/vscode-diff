@@ -9,7 +9,7 @@
 - New setting: "diff.showFoundRelativeFiles"
 
 ### Version 2.0.0
-- Rewitten: more modern code, almost no third-party dependencies, 99% smaller bundle
+- Rewritten: more modern code, almost no third-party dependencies, 99% smaller bundle
 - Removed donation popup, thank you for your support!
 - New setting: "diff.exclude", for overriding the default exclude globs
 - New setting: "diff.include", for overriding the default include globs
