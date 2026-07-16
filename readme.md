@@ -26,7 +26,7 @@ It adds 1 command to the command palette:
 
 ```js
 {
-  "diff.exclude": null, // An array of globs to exclude, unless specificed it uses the "files.exclude" setting
+  "diff.exclude": null, // An array of globs to exclude, unless specified it uses the "files.exclude" setting
   "diff.ignore": [".gitignore"], // An array of names for .gitignore-like files to use
   "diff.include": ["**/*"], // An array of globs to include
   "diff.showUntitledFiles": true, // Whether to show untitled files in the selector or not
